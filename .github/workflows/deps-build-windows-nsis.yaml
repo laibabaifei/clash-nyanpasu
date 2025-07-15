@@ -96,8 +96,11 @@ jobs:
           run_install: false
 
       - name: Install Node.js dependencies
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192 --max-semi-space-size=1024'
+          CI: true
         run: |
-          pnpm i
+          pnpm install --frozen-lockfile --prefer-offline --reporter=silent --no-optional
       - name: Prepare sidecars and resources
         run: |
           $condition = '${{ inputs.arch }}'

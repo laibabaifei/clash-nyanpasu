@@ -8,6 +8,7 @@ on:
 env:
   CARGO_INCREMENTAL: 0
   RUST_BACKTRACE: short
+  NODE_OPTIONS: '--max_old_space_size=16384'
 
 jobs:
   delete_current_releases:

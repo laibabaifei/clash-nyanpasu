@@ -87,12 +87,15 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192 --max-semi-space-size=1024'
+          CI: true
+        run: pnpm install --no-frozen-lockfile --reporter=silent --no-optional
 
       - name: Prepare fronend
         run: pnpm -r build # Build frontend
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=16384'
       - name: Prepare sidecar and resources
         run: pnpm check
       - name: Lint
@@ -102,7 +105,7 @@ jobs:
         if: startsWith(matrix.targets.os, 'ubuntu-') == false
         run: pnpm run-p lint:clippy lint:rustfmt # Lint
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=16384'
 
   # TODO: support test cross-platform
   build:
@@ -182,7 +185,7 @@ jobs:
       - name: Prepare frontend
         run: pnpm -r build
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=16384'
 
       - name: Build Backend
         run: cargo build --release --manifest-path backend/Cargo.toml
@@ -265,7 +268,10 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192 --max-semi-space-size=1024'
+          CI: true
+        run: pnpm install --no-frozen-lockfile --reporter=silent --no-optional
 
       - name: Prepare sidecar and resources
         run: pnpm check
@@ -273,7 +279,7 @@ jobs:
       - name: Prepare frontend
         run: pnpm -r build
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=16384'
 
       - name: Test
         run: pnpm test
